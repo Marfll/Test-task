@@ -1,0 +1,45 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          scriptName
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: checking arp address
+# Description:       This file should be used to construct scripts to be placed in /etc/init.d
+### END INIT INFO
+
+case "$1" in
+
+start)
+ echo "$(date) service dntt22 started" >> /var/log/dntt22
+ /opt/dntt22.sh &
+ echo $!>/var/run/dntt22.pid
+ ;;
+
+stop)
+ echo "$(date) service dntt22 stopped" >> /var/log/dntt22
+ kill -1 'cat /var/run/dntt22.pid'
+ rm /var/run/dntt22.pid
+;;
+
+restart)
+ $0 stop
+ $0 start
+;;
+
+status)
+if [ -e /var/run/dntt22.pid ]; then
+	echo dntt22 is running, pid='cat /var/run/dntt22.pid'
+ else
+	echo dntt22 is NOT  running
+	 exit 1
+ fi
+;;
+
+*)
+ echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0
